@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>VOLGA - Sistema Mayorista</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <style>
+        body { background: #f4f6f9; }
+        .brand { font-weight: 700; letter-spacing: 1px; font-size: 22px; }
+        .card { border-radius: 1rem; box-shadow: 0 10px 20px rgba(0,0,0,.08); }
+        .table thead { background:#212529; color:white; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-dark mb-4">
+    <div class="container">
+        <span class="navbar-brand brand">VOLGA</span>
+        <span class="text-white">Sistema de Pedidos Mayoristas</span>
+        <a href="pedidos.html" class="btn btn-outline-light btn-sm">
+            Ver pedidos
+        </a>
+
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row g-4">
+
+        <!-- NUEVO PRODUCTO -->
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h5 id="tituloForm">Nuevo Producto</h5>
+
+                <input id="nombre" class="form-control mb-2" placeholder="Nombre" />
+                <input id="costo" type="number" class="form-control mb-2" placeholder="Costo" />
+                <input id="precio" type="number" class="form-control mb-2" placeholder="Precio venta" />
+
+                <button class="btn btn-primary w-100" onclick="guardar()">Guardar</button>
+                <button class="btn btn-secondary w-100 mt-2 d-none" id="cancelarBtn" onclick="cancelar()">Cancelar</button>
+            </div>
+        </div>
+
+        <!-- LISTADO -->
+        <div class="col-md-8">
+            <div class="card p-3">
+                <h5>Productos</h5>
+
+                <!-- BUSCADOR -->
+                <input
+                        type="text"
+                        id="filtro"
+                        class="form-control mb-3"
+                        placeholder="Buscar producto..."
+                        onkeyup="filtrarProductos()"
+                />
+
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Costo</th>
+                        <th>Precio</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tabla"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    const API = 'http://localhost:8080/api/productos';
+    let editandoId = null;
+
+    function cargar() {
+        axios.get(API).then(r => {
+            const t = document.getElementById('tabla');
+            t.innerHTML = '';
+            r.data.forEach(p => {
+                t.innerHTML += `
+                    <tr>
+                        <td>${p.nombre}</td>
+                        <td>${p.costo}</td>
+                        <td>${p.precioVenta}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning"
+                                onclick="cargarEdicion(${p.id}, '${p.nombre}', ${p.costo}, ${p.precioVenta})">
+                                Editar
+                            </button>
+                            <button class="btn btn-sm btn-danger ms-1"
+                                onclick="eliminar(${p.id})">
+                                Borrar
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        });
+    }
+
+    function guardar() {
+        const prod = {
+            nombre: nombre.value,
+            costo: costo.value,
+            precioVenta: precio.value
+        };
+
+        if (editandoId == null) {
+            axios.post(API, prod).then(() => limpiar());
+        } else {
+            axios.put(API + "/" + editandoId, prod).then(() => {
+                editandoId = null;
+                limpiar();
+                document.getElementById("tituloForm").innerText = "Nuevo Producto";
+                document.getElementById("cancelarBtn").classList.add("d-none");
+            });
+        }
+    }
+
+    function cargarEdicion(id, nombreP, costoP, precioP) {
+        editandoId = id;
+        nombre.value = nombreP;
+        costo.value = costoP;
+        precio.value = precioP;
+        document.getElementById("tituloForm").innerText = "Editar Producto";
+        document.getElementById("cancelarBtn").classList.remove("d-none");
+    }
+
+    function cancelar() {
+        editandoId = null;
+        limpiar();
+        document.getElementById("tituloForm").innerText = "Nuevo Producto";
+        document.getElementById("cancelarBtn").classList.add("d-none");
+    }
+
+    function eliminar(id) {
+        if (!confirm("¿Seguro que querés borrar este producto?")) return;
+        axios.delete(API + "/" + id).then(() => cargar());
+    }
+
+    function filtrarProductos() {
+        const texto = document.getElementById("filtro").value.toLowerCase();
+        const filas = document.querySelectorAll("#tabla tr");
+
+        filas.forEach(fila => {
+            const nombre = fila.children[0].innerText.toLowerCase();
+            fila.style.display = nombre.includes(texto) ? "" : "none";
+        });
+    }
+
+    function limpiar() {
+        nombre.value = '';
+        costo.value = '';
+        precio.value = '';
+        cargar();
+    }
+
+    cargar();
+</script>
+
+</body>
+</html>
