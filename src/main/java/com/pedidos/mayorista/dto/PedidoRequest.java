@@ -10,6 +10,8 @@ import java.util.List;
 @NoArgsConstructor
 public class PedidoRequest {
 
+    public String metodoPago;   // 👈 NUEVO
+
     public List<ItemPedido> items;
 
     public static class ItemPedido {

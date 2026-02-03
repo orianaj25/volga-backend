@@ -23,6 +23,9 @@ public class Pedido {
 
     private BigDecimal total;
 
+    @Column(name = "metodo_pago")
+    private String metodoPago;
+
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<DetallePedido> detalles;

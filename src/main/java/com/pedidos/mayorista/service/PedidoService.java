@@ -27,6 +27,8 @@ public class PedidoService {
 
         Pedido pedido = new Pedido();
         pedido.setFecha(LocalDateTime.now());
+        pedido.setMetodoPago(request.metodoPago);
+
 
         List<DetallePedido> detalles = new ArrayList<>();
         BigDecimal total = BigDecimal.ZERO;

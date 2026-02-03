@@ -19,7 +19,8 @@ public interface DetallePedidoRepository extends JpaRepository<DetallePedido,Lon
             pr.nombre,
             d.cantidad,
             d.subtotal,
-            p.total
+            p.total,
+            p.metodoPago
         )
         FROM DetallePedido d
         JOIN d.pedido p
