@@ -1,11 +1,14 @@
 package com.pedidos.mayorista.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class PedidoDetalleDTO {
 
     public Long pedidoId;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "America/Argentina/Buenos_Aires")
     public LocalDateTime fecha;
     public String producto;
     public Integer cantidad;
