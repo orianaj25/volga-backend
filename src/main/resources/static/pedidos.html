@@ -141,11 +141,18 @@
     let seleccion = {};
     let detalleGlobal = [];
 
-    function formatearFecha(fechaIso) {
-        const f = new Date(fechaIso);
-        return f.toLocaleDateString("es-AR",{day:"2-digit",month:"long",year:"numeric"})
-            +" "+f.toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"});
-    }
+ function formatearFecha(fechaIso) {
+    const f = new Date(fechaIso);
+
+    return f.toLocaleString("es-AR", {
+        timeZone: "America/Argentina/Buenos_Aires",
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+}
 
     function cargarProductos() {
         axios.get(API_PROD).then(r => {
