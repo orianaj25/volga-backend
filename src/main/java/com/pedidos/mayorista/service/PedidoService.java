@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,9 +27,9 @@ public class PedidoService {
     public Pedido crearPedido(PedidoRequest request) {
 
         Pedido pedido = new Pedido();
-        pedido.setFecha(LocalDateTime.now());
-        pedido.setMetodoPago(request.metodoPago);
 
+        pedido.setFecha(LocalDateTime.now(ZoneId.of("America/Argentina/Buenos_Aires"))); // 🔥 FIX
+        pedido.setMetodoPago(request.metodoPago);
 
         List<DetallePedido> detalles = new ArrayList<>();
         BigDecimal total = BigDecimal.ZERO;
