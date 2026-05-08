@@ -11,7 +11,7 @@ import java.util.List;
 public class PedidoRequest {
 
     public String metodoPago;   // 👈 NUEVO
-
+    public String dniCliente;
     public List<ItemPedido> items;
 
     public static class ItemPedido {

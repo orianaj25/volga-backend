@@ -31,4 +31,7 @@ public class Pedido {
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<DetallePedido> detalles;
+
+    @Column(name = "dni_cliente")
+    private String dniCliente;
 }

@@ -30,6 +30,7 @@ public class PedidoService {
 
         pedido.setFecha(LocalDateTime.now(ZoneId.of("America/Argentina/Buenos_Aires"))); // 🔥 FIX
         pedido.setMetodoPago(request.metodoPago);
+        pedido.setDniCliente(request.dniCliente);
 
         List<DetallePedido> detalles = new ArrayList<>();
         BigDecimal total = BigDecimal.ZERO;
