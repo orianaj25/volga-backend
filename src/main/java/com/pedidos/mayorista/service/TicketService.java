@@ -11,8 +11,6 @@ import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
-
-import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.time.format.DateTimeFormatter;
 
