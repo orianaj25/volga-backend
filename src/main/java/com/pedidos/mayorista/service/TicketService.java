@@ -180,10 +180,9 @@ public class TicketService {
 
         } catch (Exception e) {
 
-            throw new RuntimeException(
-                    "Error generando ticket",
-                    e
-            );
+            e.printStackTrace();
+
+            throw new RuntimeException(e);
         }
     }
 }
