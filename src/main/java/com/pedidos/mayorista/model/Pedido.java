@@ -28,7 +28,11 @@ public class Pedido {
     @Column(name = "metodo_pago")
     private String metodoPago;
 
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    @OneToMany(
+            mappedBy = "pedido",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER
+    )
     @JsonIgnore
     private List<DetallePedido> detalles;
 
