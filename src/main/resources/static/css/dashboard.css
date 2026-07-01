@@ -1,0 +1,260 @@
+/* =========================================================
+   VOLGA - Dashboard CSS
+   Base del proyecto
+   ========================================================= */
+
+:root{
+
+    --primary:#2563eb;
+    --primary-hover:#1d4ed8;
+
+    --success:#22c55e;
+    --warning:#f59e0b;
+    --danger:#ef4444;
+
+    --sidebar:#111827;
+    --background:#f4f6f9;
+    --card:#ffffff;
+
+    --text:#1f2937;
+    --text-light:#6b7280;
+
+    --radius:18px;
+
+    --shadow:
+        0 10px 25px rgba(0,0,0,.08);
+}
+
+/* =========================================================
+   GENERAL
+   ========================================================= */
+
+body{
+
+    background:var(--background);
+
+    color:var(--text);
+
+    font-family:
+            "Segoe UI",
+            Tahoma,
+            Geneva,
+            Verdana,
+            sans-serif;
+
+    margin:0;
+}
+
+.brand{
+
+    font-size:22px;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+}
+
+/* =========================================================
+   NAVBAR (temporal)
+   Luego desaparecerá cuando hagamos el Sidebar
+   ========================================================= */
+
+.navbar{
+
+    box-shadow:
+            0 3px 10px rgba(0,0,0,.10);
+}
+
+/* =========================================================
+   TARJETAS
+   ========================================================= */
+
+.card{
+
+    border:none;
+
+    border-radius:var(--radius);
+
+    box-shadow:var(--shadow);
+
+    transition:.25s;
+}
+
+.card:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+            0 15px 30px rgba(0,0,0,.12);
+}
+
+/* =========================================================
+   BOTONES
+   ========================================================= */
+
+.btn{
+
+    border-radius:12px;
+
+    font-weight:600;
+}
+
+.btn-primary{
+
+    background:var(--primary);
+
+    border:none;
+}
+
+.btn-primary:hover{
+
+    background:var(--primary-hover);
+}
+
+.btn-success{
+
+    border:none;
+}
+
+.btn-danger{
+
+    border:none;
+}
+
+.btn-warning{
+
+    color:white;
+}
+
+/* =========================================================
+   INPUTS
+   ========================================================= */
+
+.form-control,
+.form-select{
+
+    border-radius:12px;
+
+    border:1px solid #d1d5db;
+}
+
+.form-control:focus,
+.form-select:focus{
+
+    box-shadow:none;
+
+    border-color:var(--primary);
+}
+
+/* =========================================================
+   TABLAS
+   ========================================================= */
+
+.table{
+
+    vertical-align:middle;
+}
+
+.table thead{
+
+    background:#212529;
+
+    color:white;
+}
+
+.table th{
+
+    font-weight:600;
+}
+
+.table tbody tr{
+
+    transition:.20s;
+}
+
+.table tbody tr:hover{
+
+    background:#eef4ff;
+}
+
+/* =========================================================
+   TITULOS
+   ========================================================= */
+
+h1,
+h2,
+h3,
+h4,
+h5{
+
+    font-weight:700;
+}
+
+/* =========================================================
+   BADGES
+   ========================================================= */
+
+.badge{
+
+    border-radius:10px;
+
+    padding:7px 12px;
+}
+
+/* =========================================================
+   TOTAL
+   ========================================================= */
+
+.total-box{
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    color:var(--primary);
+}
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+
+.modal-content{
+
+    border:none;
+
+    border-radius:18px;
+}
+
+/* =========================================================
+   SCROLL
+   ========================================================= */
+
+::-webkit-scrollbar{
+
+    width:10px;
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#cbd5e1;
+
+    border-radius:10px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:#94a3b8;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media(max-width:768px){
+
+    .card{
+
+        margin-bottom:15px;
+    }
+
+}
