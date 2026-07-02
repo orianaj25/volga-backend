@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 public class DashboardController {
 
@@ -21,6 +23,11 @@ public class DashboardController {
 
         return dashboardService.obtenerDashboard();
 
+    }
+
+    @GetMapping("/ventas-semana")
+    public List<Integer> ventasSemana() {
+        return dashboardService.ventasUltimos7Dias();
     }
 
 }

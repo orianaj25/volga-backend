@@ -4,8 +4,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     cargarDashboard();
 
+    crearGraficoVentas(); // 👈 ahora conectado al backend
+
 });
 
+
+/* =========================
+   DASHBOARD TARJETAS
+========================= */
 async function cargarDashboard() {
     try {
         const response = await fetch("/api/dashboard");
@@ -15,10 +21,6 @@ async function cargarDashboard() {
         }
 
         const data = await response.json();
-
-        // =========================
-        // ACTUALIZAR TARJETAS
-        // =========================
 
         document.getElementById("ventasDia").innerText =
             "$" + formatearNumero(data.ventasDelDia);
@@ -37,6 +39,10 @@ async function cargarDashboard() {
     }
 }
 
+
+/* =========================
+   FECHA
+========================= */
 function actualizarFecha() {
 
     const hoy = new Date();
@@ -52,12 +58,69 @@ function actualizarFecha() {
 
     document.getElementById("fechaActual").innerHTML =
         `<i class="bi bi-calendar3"></i> ${fecha}`;
-
 }
 
-/**
- * Formatea números tipo 100000 -> 100.000
- */
+
+/* =========================
+   FORMATO NÚMEROS
+========================= */
 function formatearNumero(numero) {
     return new Intl.NumberFormat("es-AR").format(numero);
+}
+
+
+/* =========================
+   GRÁFICO VENTAS SEMANA
+========================= */
+async function crearGraficoVentas() {
+
+    try {
+
+        const response = await fetch("/ventas-semana");
+
+        if (!response.ok) {
+            throw new Error("Error al cargar ventas semana");
+        }
+
+        const data = await response.json();
+
+        const ctx = document.getElementById("ventasChart");
+
+        if (!ctx) return;
+
+        new Chart(ctx, {
+
+            type: "line",
+
+            data: {
+                labels: ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"],
+
+                datasets: [{
+                    label: "Ventas últimos 7 días",
+                    data: data,
+
+                    borderColor: "#3b82f6",
+                    backgroundColor: "rgba(59, 130, 246, 0.15)",
+                    fill: true,
+                    tension: 0.4,
+
+                    pointBackgroundColor: "#3b82f6",
+                    pointRadius: 4
+                }]
+            },
+
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true
+                    }
+                }
+            }
+
+        });
+
+    } catch (error) {
+        console.error("Error cargando gráfico ventas:", error);
+    }
 }

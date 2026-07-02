@@ -258,3 +258,37 @@ h5{
     }
 
 }
+
+/* ======================================
+   DASHBOARD - GRÁFICOS
+====================================== */
+
+.dashboard-middle{
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.chart-card{
+    background: #fff;
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,.08);
+}
+
+.card-header{
+    margin-bottom: 20px;
+}
+
+.card-header h3{
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1d3557;
+}
+
+.chart-card canvas{
+    width: 100% !important;
+    height: 320px !important;
+}

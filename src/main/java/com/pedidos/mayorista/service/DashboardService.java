@@ -6,8 +6,13 @@ import com.pedidos.mayorista.repository.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class DashboardService {
@@ -42,6 +47,37 @@ public class DashboardService {
 
         );
 
+    }
+
+    public List<Integer> ventasUltimos7Dias() {
+
+        LocalDateTime fin = LocalDateTime.now();
+        LocalDateTime inicio = fin.minusDays(6);
+
+        List<Object[]> resultados =
+                pedidoRepository.ventasPorDia(inicio, fin);
+
+        Map<LocalDate, BigDecimal> mapa = new HashMap<>();
+
+        for (Object[] r : resultados) {
+            LocalDate fecha = ((java.sql.Date) r[0]).toLocalDate();
+            BigDecimal total = (BigDecimal) r[1];
+            mapa.put(fecha, total);
+        }
+
+        // completar los 7 días (aunque no haya ventas)
+        List<Integer> ventas = new ArrayList<>();
+
+        for (int i = 6; i >= 0; i--) {
+
+            LocalDate dia = LocalDate.now().minusDays(i);
+
+            BigDecimal valor = mapa.getOrDefault(dia, BigDecimal.ZERO);
+
+            ventas.add(valor.intValue());
+        }
+
+        return ventas;
     }
 
 }

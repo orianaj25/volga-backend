@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface PedidoRepository extends JpaRepository<Pedido,Long> {
     // Total vendido en el día
@@ -33,6 +34,17 @@ public interface PedidoRepository extends JpaRepository<Pedido,Long> {
         WHERE p.fecha BETWEEN :inicio AND :fin
     """)
     Long clientesDelDia(LocalDateTime inicio, LocalDateTime fin);
+
+    @Query("""
+    SELECT
+        FUNCTION('DATE', p.fecha),
+        SUM(p.total)
+    FROM Pedido p
+    WHERE p.fecha BETWEEN :inicio AND :fin
+    GROUP BY FUNCTION('DATE', p.fecha)
+    ORDER BY FUNCTION('DATE', p.fecha)
+""")
+    List<Object[]> ventasPorDia(LocalDateTime inicio, LocalDateTime fin);
 
 }
 
