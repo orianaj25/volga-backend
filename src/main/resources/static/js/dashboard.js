@@ -82,18 +82,21 @@ async function crearGraficoVentas() {
             throw new Error("Error al cargar ventas semana");
         }
 
-        const data = await response.json();
+        const result = await response.json();
 
         const ctx = document.getElementById("ventasChart");
 
         if (!ctx) return;
+
+        const labels = result.labels; // 👈 del backend
+        const data = result.data;     // 👈 del backend
 
         new Chart(ctx, {
 
             type: "line",
 
             data: {
-                labels: ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"],
+                labels: labels,
 
                 datasets: [{
                     label: "Ventas últimos 7 días",
@@ -111,6 +114,7 @@ async function crearGraficoVentas() {
 
             options: {
                 responsive: true,
+
                 plugins: {
                     legend: {
                         display: true
@@ -123,4 +127,5 @@ async function crearGraficoVentas() {
     } catch (error) {
         console.error("Error cargando gráfico ventas:", error);
     }
+}
 }
