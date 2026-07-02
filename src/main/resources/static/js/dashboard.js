@@ -1,5 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
+
+    actualizarFecha();
+
     cargarDashboard();
+
 });
 
 async function cargarDashboard() {
@@ -31,6 +35,24 @@ async function cargarDashboard() {
     } catch (error) {
         console.error("Error cargando dashboard:", error);
     }
+}
+
+function actualizarFecha() {
+
+    const hoy = new Date();
+
+    const opciones = {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    };
+
+    const fecha = hoy.toLocaleDateString("es-AR", opciones);
+
+    document.getElementById("fechaActual").innerHTML =
+        `<i class="bi bi-calendar3"></i> ${fecha}`;
+
 }
 
 /**
