@@ -9,10 +9,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.format.TextStyle;
+import java.util.*;
 
 @Service
 public class DashboardService {
@@ -49,7 +47,7 @@ public class DashboardService {
 
     }
 
-    public List<Integer> ventasUltimos7Dias() {
+    public Map<String, Object> ventasUltimos7Dias() {
 
         LocalDateTime fin = LocalDateTime.now();
         LocalDateTime inicio = fin.minusDays(6);
@@ -65,19 +63,26 @@ public class DashboardService {
             mapa.put(fecha, total);
         }
 
-        // completar los 7 días (aunque no haya ventas)
         List<Integer> ventas = new ArrayList<>();
+        List<String> labels = new ArrayList<>();
 
         for (int i = 6; i >= 0; i--) {
 
             LocalDate dia = LocalDate.now().minusDays(i);
+
+            labels.add(dia.getDayOfWeek()
+                    .getDisplayName(TextStyle.SHORT, new Locale("es", "AR")));
 
             BigDecimal valor = mapa.getOrDefault(dia, BigDecimal.ZERO);
 
             ventas.add(valor.intValue());
         }
 
-        return ventas;
+        Map<String, Object> response = new HashMap<>();
+        response.put("labels", labels);
+        response.put("data", ventas);
+
+        return response;
     }
 
 }
