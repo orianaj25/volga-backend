@@ -128,4 +128,3 @@ async function crearGraficoVentas() {
         console.error("Error cargando gráfico ventas:", error);
     }
 }
-}
