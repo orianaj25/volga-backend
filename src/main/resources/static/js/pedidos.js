@@ -1,368 +1,309 @@
 const API_PROD = "/api/productos";
-  const API_PEDIDOS = "/api/pedidos";
-
-  let productos = [];
-  let productosGlobal = [];
-  let seleccion = {};
-  let detalleGlobal = [];
-
-  function formatearFecha(fechaIso) {
-      const f = new Date(fechaIso);
-
-      return f.toLocaleString("es-AR", {
-          timeZone: "America/Argentina/Buenos_Aires",
-          day: "2-digit",
-          month: "long",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit"
-      });
-  }
+const API_PEDIDOS = "/api/pedidos";
 
-  function cargarProductos() {
-      axios.get(API_PROD).then(r => {
-          productos = r.data;
-          productosGlobal = r.data;
-          renderProductos(productos);
-      });
-  }
+let productos = [];
+let productosGlobal = [];
+let seleccion = {};
 
-  function renderProductos(lista) {
-      const t = document.getElementById("tabla");
-      t.innerHTML = "";
+/* =========================
+   CARGAR PRODUCTOS
+========================= */
 
-      lista.forEach(p => {
+function cargarProductos() {
 
-          if (!seleccion[p.id]) {
-              seleccion[p.id] = {
-                  activo: false,
-                  cantidad: 1
-              };
-          }
+    axios.get(API_PROD)
+        .then(response => {
 
-          t.innerHTML += `
-          <tr>
-              <td>
-                  <input type="checkbox"
-                      ${seleccion[p.id].activo ? "checked" : ""}
-                      onchange="toggle(${p.id}, this.checked)">
-              </td>
+            productos = response.data;
+            productosGlobal = response.data;
 
-              <td>${p.nombre}</td>
+            renderProductos(productos);
 
-              <td>$${p.precioVenta}</td>
+        })
+        .catch(error => {
 
-              <td>
-                  <input type="number"
-                      min="1"
-                      value="${seleccion[p.id].cantidad}"
-                      class="form-control form-control-sm"
-                      style="width:80px"
-                      onchange="cambiarCantidad(${p.id}, this.value)"
-                      ${seleccion[p.id].activo ? "" : "disabled"}
-                      id="cant-${p.id}">
-              </td>
+            console.error("Error cargando productos:", error);
 
-              <td>
-                  $ <span id="sub-${p.id}">0</span>
-              </td>
-          </tr>`;
-      });
+        });
 
-      recalcular();
-  }
+}
 
-  function filtrarProductos() {
+/* =========================
+   RENDER PRODUCTOS
+========================= */
 
-      const txt =
-          document.getElementById("filtroProductos")
-          .value
-          .toLowerCase();
+function renderProductos(lista) {
 
-      renderProductos(
-          productosGlobal.filter(p =>
-              p.nombre.toLowerCase().includes(txt)
-          )
-      );
-  }
+    const tabla = document.getElementById("tabla");
 
-  function toggle(id, checked) {
+    if (!tabla) return;
 
-      seleccion[id].activo = checked;
+    tabla.innerHTML = "";
 
-      document.getElementById("cant-" + id).disabled = !checked;
+    lista.forEach(producto => {
 
-      recalcular();
-  }
+        if (!seleccion[producto.id]) {
 
-  function cambiarCantidad(id, cant) {
+            seleccion[producto.id] = {
 
-      seleccion[id].cantidad = parseInt(cant);
+                activo: false,
+                cantidad: 1
 
-      recalcular();
-  }
+            };
 
-  function recalcular() {
+        }
 
-      let total = 0;
+        tabla.innerHTML += `
 
-      productosGlobal.forEach(p => {
+            <tr>
 
-          const sel = seleccion[p.id];
+                <td>
 
-          let sub = 0;
+                    <input
+                        type="checkbox"
+                        ${seleccion[producto.id].activo ? "checked" : ""}
+                        onchange="toggle(${producto.id}, this.checked)">
 
-          if (sel && sel.activo) {
+                </td>
 
-              sub = p.precioVenta * sel.cantidad;
+                <td>${producto.nombre}</td>
 
-              total += sub;
-          }
+                <td>$${producto.precioVenta}</td>
 
-          const el = document.getElementById("sub-" + p.id);
+                <td>
 
-          if (el) {
-              el.innerText = sub.toFixed(2);
-          }
-      });
+                    <input
+                        type="number"
+                        min="1"
+                        value="${seleccion[producto.id].cantidad}"
+                        class="form-control form-control-sm"
+                        style="width:80px"
+                        onchange="cambiarCantidad(${producto.id}, this.value)"
+                        ${seleccion[producto.id].activo ? "" : "disabled"}
+                        id="cant-${producto.id}">
 
-      document.getElementById("total").innerText =
-          total.toFixed(2);
-  }
+                </td>
 
-  /* =========================
-     MOSTRAR DNI OPCIONAL
-  ========================= */
+                <td>
 
-  function toggleDni() {
+                    $
+                    <span id="sub-${producto.id}">
+                        0
+                    </span>
 
-      const metodo =
-          document.getElementById("metodoPago").value;
+                </td>
 
-      const contenedor =
-          document.getElementById("dniContainer");
+            </tr>
 
-      if (metodo === "MP_TRANSFERENCIA") {
+        `;
 
-          contenedor.style.display = "block";
+    });
 
-      } else {
+    recalcular();
 
-          contenedor.style.display = "none";
+}
 
-          document.getElementById("dniCliente").value = "";
-      }
-  }
+/* =========================
+   FILTRAR PRODUCTOS
+========================= */
 
-  /* =========================
-     GUARDAR PEDIDO
-  ========================= */
+function filtrarProductos() {
 
-  function guardarPedido() {
+    const texto = document
+        .getElementById("filtroProductos")
+        .value
+        .toLowerCase();
 
-      const items = [];
+    renderProductos(
 
-      for (const id in seleccion) {
+        productosGlobal.filter(producto =>
 
-          const s = seleccion[id];
+            producto.nombre
+                .toLowerCase()
+                .includes(texto)
 
-          if (s.activo) {
+        )
 
-              items.push({
-                  productoId: +id,
-                  cantidad: s.cantidad
-              });
-          }
-      }
+    );
 
-      const metodo =
-          document.getElementById("metodoPago").value;
+}
 
-      const dni =
-          document.getElementById("dniCliente").value;
+/* =========================
+   ACTIVAR PRODUCTO
+========================= */
 
-      if (!items.length) {
-          return alert("Debe seleccionar al menos un producto");
-      }
+function toggle(id, checked) {
 
-      if (!metodo) {
-          return alert("Debe seleccionar un método de pago");
-      }
+    seleccion[id].activo = checked;
 
-      axios.post(API_PEDIDOS, {
+    document.getElementById("cant-" + id).disabled = !checked;
 
-          items: items,
+    recalcular();
 
-          metodoPago: metodo,
+}
 
-          dniCliente: dni
+/* =========================
+   CAMBIAR CANTIDAD
+========================= */
 
-      }).then(() => {
+function cambiarCantidad(id, cantidad) {
 
-          alert("Pedido guardado");
+    seleccion[id].cantidad = parseInt(cantidad);
 
-          cargarDetalle();
+    recalcular();
 
-          location.reload();
-      });
-  }
+}
 
-  /* =========================
-     CARGAR DETALLE
-  ========================= */
+/* =========================
+   RECALCULAR TOTAL
+========================= */
 
-  function cargarDetalle() {
+function recalcular() {
 
-      axios.get(API_PEDIDOS + "/detalle")
-          .then(r => {
+    let total = 0;
 
-              detalleGlobal = r.data;
+    productosGlobal.forEach(producto => {
 
-              renderDetalle(detalleGlobal);
-          });
-  }
+        const seleccionado = seleccion[producto.id];
 
-  /* =========================
-     RENDER DETALLE
-  ========================= */
+        let subtotal = 0;
 
-  function renderDetalle(lista) {
+        if (seleccionado && seleccionado.activo) {
 
-      const t =
-          document.getElementById("tablaDetalle");
+            subtotal = producto.precioVenta * seleccionado.cantidad;
 
-      t.innerHTML = "";
+            total += subtotal;
 
-      lista.forEach(d => {
+        }
 
-          t.innerHTML += `
-          <tr>
+        const celdaSubtotal = document.getElementById("sub-" + producto.id);
 
-              <td>${d.pedidoId}</td>
+        if (celdaSubtotal) {
 
-              <td>${formatearFecha(d.fecha)}</td>
+            celdaSubtotal.innerText = subtotal.toFixed(2);
 
-              <td>${d.producto}</td>
+        }
 
-              <td>${d.cantidad}</td>
+    });
 
-              <td>$${d.subtotal}</td>
+    const totalElemento = document.getElementById("total");
 
-              <td>$${d.totalPedido}</td>
+    if (totalElemento) {
 
-              <td>${d.metodoPago}</td>
+        totalElemento.innerText = total.toFixed(2);
 
-              <td>
+    }
 
-                  <button class="btn btn-sm btn-primary"
-                      onclick="verPedido(${d.pedidoId})">
+}
 
-                      Ver
-                  </button>
+/* =========================
+   MOSTRAR DNI
+========================= */
 
-                  <button class="btn btn-sm btn-success"
-                      onclick="descargarTicket(${d.pedidoId})">
+function toggleDni() {
 
-                      Ticket
-                  </button>
+    const metodo = document.getElementById("metodoPago").value;
 
-              </td>
+    const contenedor = document.getElementById("dniContainer");
 
-          </tr>`;
-      });
-  }
+    if (metodo === "MP_TRANSFERENCIA") {
 
-  /* =========================
-     FILTRAR DETALLE
-  ========================= */
+        contenedor.style.display = "block";
 
-  function filtrarDetalle() {
+    } else {
 
-      const txt =
-          document.getElementById("filtro")
-          .value
-          .toLowerCase();
+        contenedor.style.display = "none";
 
-      renderDetalle(
+        document.getElementById("dniCliente").value = "";
 
-          detalleGlobal.filter(d =>
+    }
 
-              d.producto.toLowerCase().includes(txt)
+}
 
-              ||
+/* =========================
+   GUARDAR PEDIDO
+========================= */
 
-              d.pedidoId.toString().includes(txt)
+function guardarPedido() {
 
-              ||
+    const items = [];
 
-              formatearFecha(d.fecha)
-                  .toLowerCase()
-                  .includes(txt)
-          )
-      );
-  }
+    for (const id in seleccion) {
 
-  /* =========================
-     VER PEDIDO
-  ========================= */
+        if (seleccion[id].activo) {
 
-  function verPedido(id) {
+            items.push({
 
-      const pedido =
-          detalleGlobal.filter(d => d.pedidoId === id);
+                productoId: Number(id),
 
-      document.getElementById("modalId").innerText = id;
+                cantidad: seleccion[id].cantidad
 
-      document.getElementById("modalFecha").innerText =
-          formatearFecha(pedido[0].fecha);
+            });
 
-      document.getElementById("modalTotal").innerText =
-          pedido[0].totalPedido;
+        }
 
-      document.getElementById("modalPago").innerText =
-          pedido[0].metodoPago;
+    }
 
-      const t =
-          document.getElementById("modalItems");
+    const metodo = document.getElementById("metodoPago").value;
 
-      t.innerHTML = "";
+    const dni = document.getElementById("dniCliente").value;
 
-      pedido.forEach(i => {
+    if (items.length === 0) {
 
-          t.innerHTML += `
-          <tr>
+        alert("Debe seleccionar al menos un producto");
 
-              <td>${i.producto}</td>
+        return;
 
-              <td>${i.cantidad}</td>
+    }
 
-              <td>
-                  $${(i.subtotal / i.cantidad).toFixed(2)}
-              </td>
+    if (!metodo) {
 
-              <td>$${i.subtotal}</td>
+        alert("Debe seleccionar un método de pago");
 
-          </tr>`;
-      });
+        return;
 
-      new bootstrap.Modal(
-          document.getElementById("modalPedido")
-      ).show();
-  }
+    }
 
-  /* =========================
-     DESCARGAR TICKET
-  ========================= */
+    axios.post(API_PEDIDOS, {
 
-  function descargarTicket(id) {
+        items: items,
 
-      window.open(`/tickets/${id}`, "_blank");
-  }
+        metodoPago: metodo,
 
-  /* =========================
-     INIT
-  ========================= */
+        dniCliente: dni
 
-  cargarProductos();
+    })
+    .then(() => {
 
-  cargarDetalle();
+        alert("Pedido guardado correctamente.");
+
+        window.location.href = "historial-pedidos.html";
+
+    })
+    .catch(error => {
+
+        console.error(error);
+
+        alert("No fue posible guardar el pedido.");
+
+    });
+
+}
+
+/* =========================
+   INICIO
+========================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    cargarProductos();
+
+    const metodoPago = document.getElementById("metodoPago");
+
+    if (metodoPago) {
+
+        metodoPago.addEventListener("change", toggleDni);
+
+    }
+
+});
