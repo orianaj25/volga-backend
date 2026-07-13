@@ -1,6 +1,7 @@
 package com.pedidos.mayorista.controller;
 
 import com.pedidos.mayorista.dto.PedidoDetalleDTO;
+import com.pedidos.mayorista.dto.PedidoHistorialDTO;
 import com.pedidos.mayorista.dto.PedidoRequest;
 import com.pedidos.mayorista.model.Pedido;
 import com.pedidos.mayorista.service.PedidoDetalleService;
@@ -27,6 +28,11 @@ public class PedidoController {
     @GetMapping("/detalle")
     public List<PedidoDetalleDTO> detalle() {
         return detalleService.listarDetalle();
+    }
+
+    @GetMapping("/historial")
+    public List<PedidoHistorialDTO> historial() {
+        return detalleService.listarHistorial();
     }
 
 }

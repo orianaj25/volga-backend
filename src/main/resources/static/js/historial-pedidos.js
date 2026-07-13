@@ -1,5 +1,6 @@
 const API_PEDIDOS = "/api/pedidos";
 
+let historialGlobal = [];
 let detalleGlobal = [];
 
 /* =========================
@@ -26,19 +27,24 @@ function formatearFecha(fechaIso) {
 
 function cargarDetalle() {
 
-    axios.get(API_PEDIDOS + "/detalle")
-        .then(response => {
+    Promise.all([
+        axios.get(API_PEDIDOS + "/historial"),
+        axios.get(API_PEDIDOS + "/detalle")
+    ])
+    .then(([historial, detalle]) => {
 
-            detalleGlobal = response.data;
+        historialGlobal = historial.data;
+        detalleGlobal = detalle.data;
 
-            renderDetalle(detalleGlobal);
+        renderDetalle(historialGlobal);
 
-        })
-        .catch(error => {
+    })
+    .catch(error => {
 
-            console.error("Error cargando pedidos:", error);
+        console.error("Error cargando pedidos:", error);
 
-        });
+    });
+
 }
 
 /* =========================
@@ -53,36 +59,35 @@ function renderDetalle(lista) {
 
     tabla.innerHTML = "";
 
-    lista.forEach(d => {
+    lista.forEach(pedido => {
 
         tabla.innerHTML += `
+
             <tr>
 
-                <td>${d.pedidoId}</td>
+                <td>${pedido.pedidoId}</td>
 
-                <td>${formatearFecha(d.fecha)}</td>
+                <td>${formatearFecha(pedido.fecha)}</td>
 
-                <td>${d.producto}</td>
+                <td>${pedido.cantidadProductos} productos</td>
 
-                <td>${d.cantidad}</td>
+                <td>$${pedido.total}</td>
 
-                <td>$${d.subtotal}</td>
-
-                <td>$${d.totalPedido}</td>
-
-                <td>${d.metodoPago}</td>
+                <td>${pedido.metodoPago}</td>
 
                 <td>
 
-                    <button class="btn btn-sm btn-primary"
-                        onclick="verPedido(${d.pedidoId})">
+                    <button
+                        class="btn btn-sm btn-primary"
+                        onclick="verPedido(${pedido.pedidoId})">
 
                         Ver
 
                     </button>
 
-                    <button class="btn btn-sm btn-success"
-                        onclick="descargarTicket(${d.pedidoId})">
+                    <button
+                        class="btn btn-sm btn-success"
+                        onclick="descargarTicket(${pedido.pedidoId})">
 
                         Ticket
 
@@ -91,6 +96,7 @@ function renderDetalle(lista) {
                 </td>
 
             </tr>
+
         `;
 
     });
@@ -108,19 +114,19 @@ function filtrarDetalle() {
         .value
         .toLowerCase();
 
-    const filtrados = detalleGlobal.filter(d =>
+    const filtrados = historialGlobal.filter(p =>
 
-        d.producto.toLowerCase().includes(texto)
-
-        ||
-
-        d.pedidoId.toString().includes(texto)
+        p.pedidoId.toString().includes(texto)
 
         ||
 
-        formatearFecha(d.fecha)
+        formatearFecha(p.fecha)
             .toLowerCase()
             .includes(texto)
+
+        ||
+
+        p.metodoPago.toLowerCase().includes(texto)
 
     );
 

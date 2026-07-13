@@ -1,6 +1,7 @@
 package com.pedidos.mayorista.service;
 
 import com.pedidos.mayorista.dto.PedidoDetalleDTO;
+import com.pedidos.mayorista.dto.PedidoHistorialDTO;
 import com.pedidos.mayorista.repository.DetallePedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,5 +16,9 @@ public class PedidoDetalleService {
 
     public List<PedidoDetalleDTO> listarDetalle() {
         return detalleRepo.listarDetalle();
+    }
+
+    public List<PedidoHistorialDTO> listarHistorial() {
+        return detalleRepo.listarHistorial();
     }
 }

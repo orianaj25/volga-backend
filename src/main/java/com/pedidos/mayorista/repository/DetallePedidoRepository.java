@@ -1,6 +1,7 @@
 package com.pedidos.mayorista.repository;
 
 import com.pedidos.mayorista.dto.PedidoDetalleDTO;
+import com.pedidos.mayorista.dto.PedidoHistorialDTO;
 import com.pedidos.mayorista.model.DetallePedido;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -37,4 +38,23 @@ public interface DetallePedidoRepository extends JpaRepository<DetallePedido,Lon
 """)
     Integer productosVendidos(LocalDateTime inicio,
                               LocalDateTime fin);
+
+    @Query("""
+    SELECT new com.pedidos.mayorista.dto.PedidoHistorialDTO(
+        p.id,
+        p.fecha,
+        COUNT(d.id),
+        p.total,
+        p.metodoPago
+    )
+    FROM DetallePedido d
+    JOIN d.pedido p
+    GROUP BY
+        p.id,
+        p.fecha,
+        p.total,
+        p.metodoPago
+    ORDER BY p.fecha DESC
+""")
+    List<PedidoHistorialDTO> listarHistorial();
 }
