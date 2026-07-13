@@ -6,6 +6,7 @@ import com.pedidos.mayorista.model.Pedido;
 import com.pedidos.mayorista.model.Producto;
 import com.pedidos.mayorista.repository.PedidoRepository;
 import com.pedidos.mayorista.repository.ProductoRepository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,7 @@ public class PedidoService {
         pedido.setFecha(LocalDateTime.now(ZoneId.of("America/Argentina/Buenos_Aires"))); // 🔥 FIX
         pedido.setMetodoPago(request.metodoPago);
         pedido.setDniCliente(request.dniCliente);
+        pedido.setEstado("ACTIVO");
 
         List<DetallePedido> detalles = new ArrayList<>();
         BigDecimal total = BigDecimal.ZERO;
@@ -61,6 +63,28 @@ public class PedidoService {
 
     public List<Pedido> listar() {
         return pedidoRepo.findAll();
+    }
+
+    @Transactional
+    public void anularPedido(Long id) {
+
+        Pedido pedido = pedidoRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
+
+        pedido.setEstado("ANULADO");
+
+        pedidoRepo.save(pedido);
+    }
+
+    @Transactional
+    public void restaurarPedido(Long id) {
+
+        Pedido pedido = pedidoRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
+
+        pedido.setEstado("ACTIVO");
+
+        pedidoRepo.save(pedido);
     }
 
 

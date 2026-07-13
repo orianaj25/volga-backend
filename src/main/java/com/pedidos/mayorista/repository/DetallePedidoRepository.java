@@ -15,20 +15,21 @@ public interface DetallePedidoRepository extends JpaRepository<DetallePedido,Lon
 
 
     @Query("""
-        SELECT new com.pedidos.mayorista.dto.PedidoDetalleDTO(
-            p.id,
-            p.fecha,
-            pr.nombre,
-            d.cantidad,
-            d.subtotal,
-            p.total,
-            p.metodoPago
-        )
-        FROM DetallePedido d
-        JOIN d.pedido p
-        JOIN d.producto pr
-        ORDER BY p.fecha DESC
-    """)
+    SELECT new com.pedidos.mayorista.dto.PedidoDetalleDTO(
+        p.id,
+        p.fecha,
+        pr.nombre,
+        d.cantidad,
+        d.subtotal,
+        p.total,
+        p.metodoPago
+    )
+    FROM DetallePedido d
+    JOIN d.pedido p
+    JOIN d.producto pr
+    WHERE p.estado = 'ACTIVO'
+    ORDER BY p.fecha DESC
+""")
     List<PedidoDetalleDTO> listarDetalle();
 
     @Query("""
@@ -49,6 +50,7 @@ public interface DetallePedidoRepository extends JpaRepository<DetallePedido,Lon
     )
     FROM DetallePedido d
     JOIN d.pedido p
+    WHERE p.estado = 'ACTIVO'
     GROUP BY
         p.id,
         p.fecha,
@@ -57,4 +59,43 @@ public interface DetallePedidoRepository extends JpaRepository<DetallePedido,Lon
     ORDER BY p.fecha DESC
 """)
     List<PedidoHistorialDTO> listarHistorial();
+
+    @Query("""
+    SELECT new com.pedidos.mayorista.dto.PedidoHistorialDTO(
+        p.id,
+        p.fecha,
+        COUNT(d.id),
+        p.total,
+        p.metodoPago
+    )
+    FROM DetallePedido d
+    JOIN d.pedido p
+    WHERE p.estado = 'ANULADO'
+    GROUP BY
+        p.id,
+        p.fecha,
+        p.total,
+        p.metodoPago
+    ORDER BY p.fecha DESC
+""")
+    List<PedidoHistorialDTO> listarAnulados();
+
+    @Query("""
+    SELECT new com.pedidos.mayorista.dto.PedidoHistorialDTO(
+        p.id,
+        p.fecha,
+        COUNT(d.id),
+        p.total,
+        p.metodoPago
+    )
+    FROM DetallePedido d
+    JOIN d.pedido p
+    GROUP BY
+        p.id,
+        p.fecha,
+        p.total,
+        p.metodoPago
+    ORDER BY p.fecha DESC
+""")
+    List<PedidoHistorialDTO> listarTodos();
 }

@@ -66,14 +66,37 @@
 
         <div class="row mb-3">
 
-            <div class="col-md-4">
+            <div class="col-md-5">
 
                 <input
                         type="text"
                         id="filtro"
                         class="form-control"
-                        placeholder="Buscar por pedido, fecha o método de pago..."
+                        placeholder="Buscar por N° de pedido, fecha o método de pago..."
                         onkeyup="filtrarDetalle()">
+
+            </div>
+
+            <div class="col-md-3">
+
+                <select
+                        id="filtroEstado"
+                        class="form-select"
+                        onchange="cambiarEstado()">
+
+                    <option value="ACTIVO" selected>
+                        Pedidos Activos
+                    </option>
+
+                    <option value="ANULADO">
+                        Pedidos Anulados
+                    </option>
+
+                    <option value="TODOS">
+                        Todos
+                    </option>
+
+                </select>
 
             </div>
 

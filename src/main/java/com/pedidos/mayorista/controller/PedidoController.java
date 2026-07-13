@@ -34,5 +34,24 @@ public class PedidoController {
     public List<PedidoHistorialDTO> historial() {
         return detalleService.listarHistorial();
     }
+    @PutMapping("/{id}/anular")
+    public void anularPedido(@PathVariable Long id) {
+        service.anularPedido(id);
+    }
+
+    @GetMapping("/anulados")
+    public List<PedidoHistorialDTO> anulados() {
+        return detalleService.listarAnulados();
+    }
+
+    @GetMapping("/todos")
+    public List<PedidoHistorialDTO> todos() {
+        return detalleService.listarTodos();
+    }
+
+    @PutMapping("/{id}/restaurar")
+    public void restaurarPedido(@PathVariable Long id) {
+        service.restaurarPedido(id);
+    }
 
 }

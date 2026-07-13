@@ -2,6 +2,7 @@ const API_PEDIDOS = "/api/pedidos";
 
 let historialGlobal = [];
 let detalleGlobal = [];
+let estadoActual = "ACTIVO";
 
 /* =========================
    FORMATEAR FECHA
@@ -22,13 +23,39 @@ function formatearFecha(fechaIso) {
 }
 
 /* =========================
-   CARGAR DETALLE
+   CAMBIAR ESTADO
+========================= */
+
+function cambiarEstado() {
+
+    estadoActual = document
+        .getElementById("filtroEstado")
+        .value;
+
+    cargarDetalle();
+
+}
+
+/* =========================
+   CARGAR HISTORIAL
 ========================= */
 
 function cargarDetalle() {
 
+    let endpoint = "/historial";
+
+    if (estadoActual === "ANULADO") {
+
+        endpoint = "/anulados";
+
+    } else if (estadoActual === "TODOS") {
+
+        endpoint = "/todos";
+
+    }
+
     Promise.all([
-        axios.get(API_PEDIDOS + "/historial"),
+        axios.get(API_PEDIDOS + endpoint),
         axios.get(API_PEDIDOS + "/detalle")
     ])
     .then(([historial, detalle]) => {
@@ -48,7 +75,7 @@ function cargarDetalle() {
 }
 
 /* =========================
-   RENDER DETALLE
+   RENDER HISTORIAL
 ========================= */
 
 function renderDetalle(lista) {
@@ -180,9 +207,7 @@ function verPedido(id) {
     });
 
     new bootstrap.Modal(
-
         document.getElementById("modalPedido")
-
     ).show();
 
 }

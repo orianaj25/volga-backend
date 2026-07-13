@@ -38,4 +38,7 @@ public class Pedido {
 
     @Column(name = "dni_cliente")
     private String dniCliente;
+
+    @Column(nullable = false)
+    private String estado;
 }

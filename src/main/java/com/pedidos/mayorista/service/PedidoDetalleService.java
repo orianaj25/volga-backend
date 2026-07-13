@@ -21,4 +21,11 @@ public class PedidoDetalleService {
     public List<PedidoHistorialDTO> listarHistorial() {
         return detalleRepo.listarHistorial();
     }
+
+    public List<PedidoHistorialDTO> listarAnulados() {
+        return detalleRepo.listarAnulados();
+    }
+    public List<PedidoHistorialDTO> listarTodos() {
+        return detalleRepo.listarTodos();
+    }
 }
