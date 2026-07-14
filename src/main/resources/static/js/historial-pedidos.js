@@ -88,6 +88,52 @@ function renderDetalle(lista) {
 
     lista.forEach(pedido => {
 
+        let botones = `
+            <button
+                class="btn btn-sm btn-primary"
+                onclick="verPedido(${pedido.pedidoId})">
+                Ver
+            </button>
+        `;
+
+        if (pedido.estado === "ACTIVO") {
+
+            botones += `
+
+                <button
+                    class="btn btn-sm btn-success"
+                    onclick="descargarTicket(${pedido.pedidoId})">
+
+                    Ticket
+
+                </button>
+
+                <button
+                    class="btn btn-sm btn-danger"
+                    onclick="anularPedido(${pedido.pedidoId})">
+
+                    Anular
+
+                </button>
+
+            `;
+
+        } else {
+
+            botones += `
+
+                <button
+                    class="btn btn-sm btn-warning"
+                    onclick="restaurarPedido(${pedido.pedidoId})">
+
+                    Restaurar
+
+                </button>
+
+            `;
+
+        }
+
         tabla.innerHTML += `
 
             <tr>
@@ -102,25 +148,7 @@ function renderDetalle(lista) {
 
                 <td>${pedido.metodoPago}</td>
 
-                <td>
-
-                    <button
-                        class="btn btn-sm btn-primary"
-                        onclick="verPedido(${pedido.pedidoId})">
-
-                        Ver
-
-                    </button>
-
-                    <button
-                        class="btn btn-sm btn-success"
-                        onclick="descargarTicket(${pedido.pedidoId})">
-
-                        Ticket
-
-                    </button>
-
-                </td>
+                <td>${botones}</td>
 
             </tr>
 
@@ -219,6 +247,58 @@ function verPedido(id) {
 function descargarTicket(id) {
 
     window.open(`/tickets/${id}`, "_blank");
+
+}
+
+function anularPedido(id) {
+
+    if (!confirm("¿Desea anular este pedido?")) {
+
+        return;
+
+    }
+
+    axios.put(API_PEDIDOS + "/" + id + "/anular")
+
+        .then(() => {
+
+            cargarDetalle();
+
+        })
+
+        .catch(error => {
+
+            console.error(error);
+
+            alert("No se pudo anular el pedido.");
+
+        });
+
+}
+
+function restaurarPedido(id) {
+
+    if (!confirm("¿Desea restaurar este pedido?")) {
+
+        return;
+
+    }
+
+    axios.put(API_PEDIDOS + "/" + id + "/restaurar")
+
+        .then(() => {
+
+            cargarDetalle();
+
+        })
+
+        .catch(error => {
+
+            console.error(error);
+
+            alert("No se pudo restaurar el pedido.");
+
+        });
 
 }
 
