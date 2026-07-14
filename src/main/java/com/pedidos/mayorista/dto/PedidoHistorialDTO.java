@@ -15,17 +15,21 @@ public class PedidoHistorialDTO {
 
     public String metodoPago;
 
+    public String estado;
+
     public PedidoHistorialDTO(
             Long pedidoId,
             LocalDateTime fecha,
             Long cantidadProductos,
             BigDecimal total,
-            String metodoPago) {
+            String metodoPago,
+            String estado) {
 
         this.pedidoId = pedidoId;
         this.fecha = fecha;
         this.cantidadProductos = cantidadProductos;
         this.total = total;
         this.metodoPago = metodoPago;
+        this.estado = estado;
     }
 }

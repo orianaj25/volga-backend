@@ -41,21 +41,23 @@ public interface DetallePedidoRepository extends JpaRepository<DetallePedido,Lon
                               LocalDateTime fin);
 
     @Query("""
-    SELECT new com.pedidos.mayorista.dto.PedidoHistorialDTO(
-        p.id,
-        p.fecha,
-        COUNT(d.id),
-        p.total,
-        p.metodoPago
-    )
+  SELECT new com.pedidos.mayorista.dto.PedidoHistorialDTO(
+                  p.id,
+                  p.fecha,
+                  COUNT(d.id),
+                  p.total,
+                  p.metodoPago,
+                  p.estado
+              )
     FROM DetallePedido d
     JOIN d.pedido p
     WHERE p.estado = 'ACTIVO'
-    GROUP BY
-        p.id,
-        p.fecha,
-        p.total,
-        p.metodoPago
+   GROUP BY
+                   p.id,
+                   p.fecha,
+                   p.total,
+                   p.metodoPago,
+                   p.estado
     ORDER BY p.fecha DESC
 """)
     List<PedidoHistorialDTO> listarHistorial();
@@ -67,6 +69,7 @@ public interface DetallePedidoRepository extends JpaRepository<DetallePedido,Lon
         COUNT(d.id),
         p.total,
         p.metodoPago
+         p.estado
     )
     FROM DetallePedido d
     JOIN d.pedido p
@@ -76,6 +79,7 @@ public interface DetallePedidoRepository extends JpaRepository<DetallePedido,Lon
         p.fecha,
         p.total,
         p.metodoPago
+          p.estado
     ORDER BY p.fecha DESC
 """)
     List<PedidoHistorialDTO> listarAnulados();
@@ -87,6 +91,7 @@ public interface DetallePedidoRepository extends JpaRepository<DetallePedido,Lon
         COUNT(d.id),
         p.total,
         p.metodoPago
+           p.estado
     )
     FROM DetallePedido d
     JOIN d.pedido p
@@ -95,6 +100,7 @@ public interface DetallePedidoRepository extends JpaRepository<DetallePedido,Lon
         p.fecha,
         p.total,
         p.metodoPago
+           p.estado
     ORDER BY p.fecha DESC
 """)
     List<PedidoHistorialDTO> listarTodos();
