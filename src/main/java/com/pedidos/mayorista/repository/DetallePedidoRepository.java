@@ -68,7 +68,7 @@ public interface DetallePedidoRepository extends JpaRepository<DetallePedido,Lon
         p.fecha,
         COUNT(d.id),
         p.total,
-        p.metodoPago
+        p.metodoPago,
          p.estado
     )
     FROM DetallePedido d
@@ -78,7 +78,7 @@ public interface DetallePedidoRepository extends JpaRepository<DetallePedido,Lon
         p.id,
         p.fecha,
         p.total,
-        p.metodoPago
+        p.metodoPago,
           p.estado
     ORDER BY p.fecha DESC
 """)
@@ -90,7 +90,7 @@ public interface DetallePedidoRepository extends JpaRepository<DetallePedido,Lon
         p.fecha,
         COUNT(d.id),
         p.total,
-        p.metodoPago
+        p.metodoPago,
            p.estado
     )
     FROM DetallePedido d
@@ -99,7 +99,7 @@ public interface DetallePedidoRepository extends JpaRepository<DetallePedido,Lon
         p.id,
         p.fecha,
         p.total,
-        p.metodoPago
+        p.metodoPago,
            p.estado
     ORDER BY p.fecha DESC
 """)
