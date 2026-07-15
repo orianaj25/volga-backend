@@ -24,11 +24,10 @@ public interface DetallePedidoRepository extends JpaRepository<DetallePedido,Lon
         p.total,
         p.metodoPago
     )
-    FROM DetallePedido d
-    JOIN d.pedido p
-    JOIN d.producto pr
-    WHERE p.estado = 'ACTIVO'
-    ORDER BY p.fecha DESC
+   FROM DetallePedido d
+               JOIN d.pedido p
+               JOIN d.producto pr
+               ORDER BY p.fecha DESC
 """)
     List<PedidoDetalleDTO> listarDetalle();
 
