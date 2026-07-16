@@ -25,11 +25,18 @@ public class PedidoService {
     @Autowired
     private PedidoRepository pedidoRepo;
 
+    @Autowired
+    private CajaService cajaService;
+
     public Pedido crearPedido(PedidoRequest request) {
 
         Pedido pedido = new Pedido();
 
-        pedido.setFecha(LocalDateTime.now(ZoneId.of("America/Argentina/Buenos_Aires"))); // 🔥 FIX
+        pedido.setFecha(
+                LocalDateTime.now(
+                        ZoneId.of("America/Argentina/Buenos_Aires"))
+        );
+
         pedido.setMetodoPago(request.metodoPago);
         pedido.setDniCliente(request.dniCliente);
         pedido.setEstado("ACTIVO");
@@ -40,25 +47,34 @@ public class PedidoService {
         for (PedidoRequest.ItemPedido item : request.items) {
 
             Producto p = productoRepo.findById(item.productoId)
-                    .orElseThrow(() -> new RuntimeException("Producto no existe"));
+                    .orElseThrow(() ->
+                            new RuntimeException("Producto no existe"));
 
             BigDecimal subtotal = p.getPrecioVenta()
                     .multiply(BigDecimal.valueOf(item.cantidad));
 
             DetallePedido d = new DetallePedido();
+
             d.setPedido(pedido);
             d.setProducto(p);
             d.setCantidad(item.cantidad);
             d.setSubtotal(subtotal);
 
             detalles.add(d);
+
             total = total.add(subtotal);
         }
 
         pedido.setTotal(total);
         pedido.setDetalles(detalles);
 
-        return pedidoRepo.save(pedido);
+        // Guarda el pedido
+        Pedido pedidoGuardado = pedidoRepo.save(pedido);
+
+        // Si existe una caja abierta registra automáticamente la venta
+        cajaService.registrarVenta(pedidoGuardado);
+
+        return pedidoGuardado;
     }
 
     public List<Pedido> listar() {

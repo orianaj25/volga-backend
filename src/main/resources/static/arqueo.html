@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>VOLGA - Arqueo de Caja</title>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <style>
+
+        body{
+            background:#f4f6f9;
+        }
+
+        .brand{
+            font-weight:700;
+            font-size:22px;
+            letter-spacing:1px;
+        }
+
+        .card{
+            border-radius:18px;
+            border:none;
+            box-shadow:0 10px 30px rgba(0,0,0,.08);
+        }
+
+        .card-title{
+            font-weight:600;
+        }
+
+        .valor{
+            font-size:24px;
+            font-weight:bold;
+        }
+
+        .table thead{
+            background:#212529;
+            color:white;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-dark bg-dark mb-4">
+
+    <div class="container">
+
+        <span class="navbar-brand brand">
+
+            VOLGA
+
+        </span>
+
+        <span class="text-white">
+
+            Arqueo de Caja
+
+        </span>
+
+        <div>
+
+            <a href="dashboard.html"
+               class="btn btn-outline-light btn-sm me-2">
+
+                Dashboard
+
+            </a>
+
+            <a href="historial-pedidos.html"
+               class="btn btn-outline-light btn-sm">
+
+                Pedidos
+
+            </a>
+
+        </div>
+
+    </div>
+
+</nav>
+
+<div class="container">
+
+    <!-- APERTURA -->
+
+    <div id="panelApertura">
+
+        <div class="card p-4 mb-4">
+
+            <h3 class="mb-4">
+
+                Apertura de Caja
+
+            </h3>
+
+            <div class="row">
+
+                <div class="col-md-4 mb-3">
+
+                    <label class="form-label">
+
+                        Usuario
+
+                    </label>
+
+                    <input
+                            id="usuario"
+                            class="form-control"
+                            placeholder="Administrador">
+
+                </div>
+
+                <div class="col-md-4 mb-3">
+
+                    <label class="form-label">
+
+                        Fecha
+
+                    </label>
+
+                    <input
+                            id="fechaActual"
+                            class="form-control"
+                            readonly>
+
+                </div>
+
+                <div class="col-md-4 mb-3">
+
+                    <label class="form-label">
+
+                        Hora
+
+                    </label>
+
+                    <input
+                            id="horaActual"
+                            class="form-control"
+                            readonly>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="form-label">
+
+                        Caja Inicial
+
+                    </label>
+
+                    <input
+                            id="cajaInicial"
+                            type="number"
+                            class="form-control"
+                            placeholder="0">
+
+                </div>
+
+            </div>
+
+            <div class="mt-4">
+
+                <button
+                        class="btn btn-success"
+                        onclick="abrirCaja()">
+
+                    Abrir Caja
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- PANEL CAJA -->
+
+    <div id="panelCaja" style="display:none;">
+
+        <div class="row">
+
+            <div class="col-md-3">
+
+                <div class="card p-3 mb-3">
+
+                    <div class="card-title">
+
+                        Caja Inicial
+
+                    </div>
+
+                    <div
+                            class="valor"
+                            id="lblCajaInicial">
+
+                        $0
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="card p-3 mb-3">
+
+                    <div class="card-title">
+
+                        Ventas Efectivo
+
+                    </div>
+
+                    <div
+                            class="valor text-success"
+                            id="lblVentasEfectivo">
+
+                        $0
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="card p-3 mb-3">
+
+                    <div class="card-title">
+
+                        Ventas Transferencia / MP
+
+                    </div>
+
+                    <div
+                            class="valor text-primary"
+                            id="lblVentasDigitales">
+
+                        $0
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="card p-3 mb-3">
+
+                    <div class="card-title">
+
+                        Efectivo Esperado
+
+                    </div>
+
+                    <div
+                            class="valor text-danger"
+                            id="lblEsperado">
+
+                        $0
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-6">
+
+                <div class="card p-4 mb-4">
+
+                    <h5>
+
+                        Registrar Ingreso
+
+                    </h5>
+
+                    <input
+                            id="ingresoMonto"
+                            type="number"
+                            class="form-control mb-3"
+                            placeholder="Monto">
+
+                    <input
+                            id="ingresoMotivo"
+                            class="form-control mb-3"
+                            placeholder="Motivo">
+
+                    <button
+                            class="btn btn-success"
+                            onclick="registrarIngreso()">
+
+                        Registrar Ingreso
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <div class="card p-4 mb-4">
+
+                    <h5>
+
+                        Registrar Retiro
+
+                    </h5>
+
+                    <input
+                            id="retiroMonto"
+                            type="number"
+                            class="form-control mb-3"
+                            placeholder="Monto">
+
+                    <input
+                            id="retiroMotivo"
+                            class="form-control mb-3"
+                            placeholder="Motivo">
+
+                    <button
+                            class="btn btn-danger"
+                            onclick="registrarRetiro()">
+
+                        Registrar Retiro
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="card p-4 mb-4">
+
+            <h5>
+
+                Cierre de Caja
+
+            </h5>
+
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    <label class="form-label">
+
+                        Efectivo Contado
+
+                    </label>
+
+                    <input
+                            id="efectivoContado"
+                            type="number"
+                            class="form-control">
+
+                </div>
+
+                <div class="col-md-8">
+
+                    <label class="form-label">
+
+                        Observaciones
+
+                    </label>
+
+                    <input
+                            id="observaciones"
+                            class="form-control">
+
+                </div>
+
+            </div>
+
+            <button
+                    class="btn btn-dark mt-4"
+                    onclick="cerrarCaja()">
+
+                Cerrar Caja
+
+            </button>
+
+        </div>
+
+        <div class="card p-4">
+
+            <h5 class="mb-3">
+
+                Movimientos del Día
+
+            </h5>
+
+            <table class="table table-hover">
+
+                <thead>
+
+                <tr>
+
+                    <th>Fecha</th>
+
+                    <th>Tipo</th>
+
+                    <th>Monto</th>
+
+                    <th>Motivo</th>
+
+                    <th>Usuario</th>
+
+                </tr>
+
+                </thead>
+
+                <tbody id="tablaMovimientos">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="js/arqueo.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
