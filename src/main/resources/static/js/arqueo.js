@@ -293,16 +293,15 @@ function cargarMovimientos(){
         });
 
 }
-
 /*==============================
 CERRAR CAJA
 ==============================*/
 
-function cerrarCaja(){
+function cerrarCaja() {
 
-    const body={
+    const body = {
 
-        efectivoContado:Number(
+        efectivoContado: Number(
             document.getElementById("efectivoContado").value
         ),
 
@@ -311,19 +310,56 @@ function cerrarCaja(){
 
     };
 
-    axios.post(API_CAJA+"/cerrar",body)
+    axios.post(API_CAJA + "/cerrar", body)
 
-        .then(()=>{
+        .then(response => {
 
-            alert("Caja cerrada correctamente.");
+            const caja = response.data;
+
+            let mensaje =
+                "=================================\n" +
+                "        CIERRE DE CAJA\n" +
+                "=================================\n\n" +
+
+                "Efectivo esperado: $" +
+                Number(caja.efectivoEsperado).toLocaleString("es-AR") +
+
+                "\n\nEfectivo contado: $" +
+                Number(caja.efectivoContado).toLocaleString("es-AR") +
+
+                "\n\n";
+
+            if (Number(caja.diferencia) > 0) {
+
+                mensaje +=
+                    "🟡 SOBRANTE: $" +
+                    Number(caja.diferencia).toLocaleString("es-AR");
+
+            } else if (Number(caja.diferencia) < 0) {
+
+                mensaje +=
+                    "🔴 FALTANTE: $" +
+                    Math.abs(Number(caja.diferencia)).toLocaleString("es-AR");
+
+            } else {
+
+                mensaje +=
+                    "🟢 Sin diferencias.";
+
+            }
+
+            alert(mensaje);
 
             location.reload();
 
         })
 
-        .catch(err=>{
+        .catch(err => {
 
-            alert(err.response?.data?.message || "Error");
+            alert(
+                err.response?.data?.message ||
+                "Error al cerrar la caja."
+            );
 
         });
 
