@@ -1,5 +1,6 @@
 package com.pedidos.mayorista.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -53,7 +54,7 @@ public class Caja {
     private String estado;
 
     private String observaciones;
-
+    @JsonIgnore
     @OneToMany(
             mappedBy = "caja",
             cascade = CascadeType.ALL,
