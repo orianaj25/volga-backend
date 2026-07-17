@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>VOLGA - Historial de Cajas</title>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <style>
+
+        body{
+            background:#f4f6f9;
+        }
+
+        .brand{
+            font-weight:700;
+            font-size:22px;
+            letter-spacing:1px;
+        }
+
+        .card{
+            border:none;
+            border-radius:18px;
+            box-shadow:0 10px 30px rgba(0,0,0,.08);
+        }
+
+        .table thead{
+            background:#212529;
+            color:#fff;
+        }
+
+        .positivo{
+            color:#198754;
+            font-weight:bold;
+        }
+
+        .negativo{
+            color:#dc3545;
+            font-weight:bold;
+        }
+
+        .neutro{
+            color:#0d6efd;
+            font-weight:bold;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-dark bg-dark">
+
+    <div class="container">
+
+        <span class="navbar-brand brand">
+
+            VOLGA
+
+        </span>
+
+        <span class="text-white">
+
+            Historial de Cajas
+
+        </span>
+
+        <div>
+
+            <a href="dashboard.html"
+               class="btn btn-outline-light btn-sm me-2">
+
+                Dashboard
+
+            </a>
+
+            <a href="arqueo.html"
+               class="btn btn-warning btn-sm">
+
+                Volver al Arqueo
+
+            </a>
+
+        </div>
+
+    </div>
+
+</nav>
+
+<div class="container mt-4">
+
+    <div class="card p-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <h3>
+
+                Historial de Cajas
+
+            </h3>
+
+            <input
+                    id="buscarCaja"
+                    class="form-control"
+                    style="max-width:300px"
+                    placeholder="Buscar por usuario o fecha..."
+                    onkeyup="filtrarCaja()">
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+
+                <tr>
+
+                    <th>ID</th>
+
+                    <th>Usuario</th>
+
+                    <th>Apertura</th>
+
+                    <th>Cierre</th>
+
+                    <th>Estado</th>
+
+                    <th>Diferencia</th>
+
+                    <th></th>
+
+                </tr>
+
+                </thead>
+
+                <tbody id="tablaCajas">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- MODAL -->
+
+<div class="modal fade"
+     id="modalCaja"
+     tabindex="-1">
+
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+
+                    Detalle del Arqueo
+
+                </h5>
+
+                <button
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <strong>Usuario</strong>
+
+                        <div id="mUsuario"></div>
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <strong>Estado</strong>
+
+                        <div id="mEstado"></div>
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <strong>Fecha Apertura</strong>
+
+                        <div id="mApertura"></div>
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <strong>Fecha Cierre</strong>
+
+                        <div id="mCierre"></div>
+
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+
+                        <strong>Caja Inicial</strong>
+
+                        <div id="mCajaInicial"></div>
+
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+
+                        <strong>Ventas Efectivo</strong>
+
+                        <div id="mVentasEfectivo"></div>
+
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+
+                        <strong>Ventas MP / Transferencia</strong>
+
+                        <div id="mVentasDigitales"></div>
+
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+
+                        <strong>Ingresos</strong>
+
+                        <div id="mIngresos"></div>
+
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+
+                        <strong>Retiros</strong>
+
+                        <div id="mRetiros"></div>
+
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+
+                        <strong>Efectivo Esperado</strong>
+
+                        <div id="mEsperado"></div>
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <strong>Efectivo Contado</strong>
+
+                        <div id="mContado"></div>
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <strong>Diferencia</strong>
+
+                        <div id="mDiferencia"></div>
+
+                    </div>
+
+                    <div class="col-12">
+
+                        <strong>Observaciones</strong>
+
+                        <div id="mObservaciones"></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="js/historial-cajas.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

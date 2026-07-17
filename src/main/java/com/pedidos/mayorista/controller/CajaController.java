@@ -1,6 +1,7 @@
 package com.pedidos.mayorista.controller;
 
 import com.pedidos.mayorista.dto.AbrirCajaRequest;
+import com.pedidos.mayorista.dto.CajaHistorialDTO;
 import com.pedidos.mayorista.dto.CerrarCajaRequest;
 import com.pedidos.mayorista.dto.MovimientoCajaRequest;
 import com.pedidos.mayorista.model.Caja;
@@ -9,6 +10,7 @@ import com.pedidos.mayorista.service.CajaService;
 import com.pedidos.mayorista.service.MovimientoCajaService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -103,7 +105,7 @@ public class CajaController {
      */
 
     @GetMapping("/historial")
-    public Iterable<Caja> historial() {
+    public List<CajaHistorialDTO> historial() {
 
         return cajaService.listar();
 

@@ -1,5 +1,6 @@
 package com.pedidos.mayorista.service;
 
+import com.pedidos.mayorista.dto.CajaHistorialDTO;
 import com.pedidos.mayorista.model.Caja;
 import com.pedidos.mayorista.model.Pedido;
 import com.pedidos.mayorista.repository.CajaRepository;
@@ -33,9 +34,9 @@ public class CajaService {
     /*
      * Lista todas las cajas.
      */
-    public List<Caja> listar() {
+    public List<CajaHistorialDTO> listar() {
 
-        return cajaRepository.findAllByOrderByFechaAperturaDesc();
+        return cajaRepository.listarHistorial();
 
     }
 
