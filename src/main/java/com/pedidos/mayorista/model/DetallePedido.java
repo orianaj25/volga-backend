@@ -21,7 +21,7 @@ public class DetallePedido {
     @ManyToOne
     private Producto producto;
 
-    private Integer cantidad;
+    private BigDecimal cantidad;
 
     private BigDecimal subtotal;
 }

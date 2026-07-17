@@ -24,4 +24,5 @@ public class Producto {
     private String nombre;
     private Double costo;
     private BigDecimal precioVenta;
+    private String tipoVenta;
 }

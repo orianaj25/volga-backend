@@ -51,7 +51,7 @@ public class PedidoService {
                             new RuntimeException("Producto no existe"));
 
             BigDecimal subtotal = p.getPrecioVenta()
-                    .multiply(BigDecimal.valueOf(item.cantidad));
+                    .multiply(item.getCantidad());
 
             DetallePedido d = new DetallePedido();
 

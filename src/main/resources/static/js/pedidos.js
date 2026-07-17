@@ -74,7 +74,8 @@ function renderProductos(lista) {
 
                     <input
                         type="number"
-                        min="1"
+                        step="0.001"
+                        min="0.001"
                         value="${seleccion[producto.id].cantidad}"
                         class="form-control form-control-sm"
                         style="width:80px"
@@ -148,7 +149,7 @@ function toggle(id, checked) {
 
 function cambiarCantidad(id, cantidad) {
 
-    seleccion[id].cantidad = parseInt(cantidad);
+      seleccion[id].cantidad = Number(cantidad);
 
     recalcular();
 
