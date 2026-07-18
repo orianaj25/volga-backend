@@ -13,70 +13,178 @@
     <!-- Dashboard CSS -->
     <link rel="stylesheet" href="css/dashboard.css">
 </head>
+
 <body>
 
 <nav class="navbar navbar-dark bg-dark mb-4">
+
     <div class="container">
-        <span class="navbar-brand brand">VOLGA</span>
-        <span class="text-white">Sistema de Pedidos Mayoristas</span>
 
-        <a href="dashboard.html" class="btn btn-outline-light btn-sm">
-            Dashboard
-        </a>
+        <span class="navbar-brand brand">
+            VOLGA
+        </span>
 
-        <a href="pedidos.html" class="btn btn-outline-light btn-sm">
-            Ver pedidos
-        </a>
+        <span class="text-white">
+            Sistema de Pedidos Mayoristas
+        </span>
+
+        <div>
+
+            <a href="dashboard.html"
+               class="btn btn-outline-light btn-sm">
+
+                Dashboard
+
+            </a>
+
+            <a href="pedidos.html"
+               class="btn btn-outline-light btn-sm">
+
+                Ver pedidos
+
+            </a>
+
+        </div>
 
     </div>
+
 </nav>
 
 <div class="container">
+
     <div class="row g-4">
 
-        <!-- NUEVO PRODUCTO -->
+        <!-- ========================= -->
+        <!-- NUEVO PRODUCTO            -->
+        <!-- ========================= -->
+
         <div class="col-md-4">
+
             <div class="card p-3">
-                <h5 id="tituloForm">Nuevo Producto</h5>
 
-                <input id="nombre" class="form-control mb-2" placeholder="Nombre" />
-                <input id="costo" type="number" class="form-control mb-2" placeholder="Costo" />
-                <input id="precio" type="number" class="form-control mb-2" placeholder="Precio venta" />
+                <h5 id="tituloForm">
 
-                <button class="btn btn-primary w-100" onclick="guardar()">Guardar</button>
-                <button class="btn btn-secondary w-100 mt-2 d-none" id="cancelarBtn" onclick="cancelar()">Cancelar</button>
+                    Nuevo Producto
+
+                </h5>
+
+                <input
+                        id="nombre"
+                        class="form-control mb-2"
+                        placeholder="Nombre">
+
+                <input
+                        id="costo"
+                        type="number"
+                        class="form-control mb-2"
+                        placeholder="Costo">
+
+                <input
+                        id="precio"
+                        type="number"
+                        class="form-control mb-2"
+                        placeholder="Precio de venta">
+
+                <!-- NUEVO -->
+
+                <label class="form-label mt-2">
+
+                    Tipo de venta
+
+                </label>
+
+                <select
+                        id="tipoVenta"
+                        class="form-select mb-3">
+
+                    <option value="UNIDAD">
+
+                        Por unidad
+
+                    </option>
+
+                    <option value="KILO">
+
+                        Por kilogramo
+
+                    </option>
+
+                </select>
+
+                <button
+                        class="btn btn-primary w-100"
+                        onclick="guardar()">
+
+                    Guardar
+
+                </button>
+
+                <button
+                        class="btn btn-secondary w-100 mt-2 d-none"
+                        id="cancelarBtn"
+                        onclick="cancelar()">
+
+                    Cancelar
+
+                </button>
+
             </div>
+
         </div>
 
-        <!-- LISTADO -->
-        <div class="col-md-8">
-            <div class="card p-3">
-                <h5>Productos</h5>
+        <!-- ========================= -->
+        <!-- LISTADO                   -->
+        <!-- ========================= -->
 
-                <!-- BUSCADOR -->
+        <div class="col-md-8">
+
+            <div class="card p-3">
+
+                <h5>
+
+                    Productos
+
+                </h5>
+
                 <input
                         type="text"
                         id="filtro"
                         class="form-control mb-3"
                         placeholder="Buscar producto..."
-                        onkeyup="filtrarProductos()"
-                />
+                        onkeyup="filtrarProductos()">
 
                 <table class="table table-hover">
+
                     <thead>
+
                     <tr>
+
                         <th>Nombre</th>
+
                         <th>Costo</th>
+
                         <th>Precio</th>
+
+                        <th>Tipo de venta</th>
+
                         <th>Acciones</th>
+
                     </tr>
+
                     </thead>
-                    <tbody id="tabla"></tbody>
+
+                    <tbody id="tabla">
+
+                    </tbody>
+
                 </table>
+
             </div>
+
         </div>
 
     </div>
+
 </div>
 
 <script src="js/productos.js"></script>

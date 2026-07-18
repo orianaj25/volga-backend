@@ -21,6 +21,11 @@ function cargar() {
 
             response.data.forEach(producto => {
 
+                const tipoTexto =
+                    producto.tipoVenta === "KILO"
+                        ? "Por kilogramo"
+                        : "Por unidad";
+
                 tabla.innerHTML += `
                     <tr>
 
@@ -30,6 +35,8 @@ function cargar() {
 
                         <td>${producto.precioVenta}</td>
 
+                        <td>${tipoTexto}</td>
+
                         <td>
 
                             <button
@@ -38,7 +45,8 @@ function cargar() {
                                     ${producto.id},
                                     '${producto.nombre}',
                                     ${producto.costo},
-                                    ${producto.precioVenta}
+                                    ${producto.precioVenta},
+                                    '${producto.tipoVenta}'
                                 )">
 
                                 Editar
@@ -81,7 +89,9 @@ function guardar() {
 
         costo: document.getElementById("costo").value,
 
-        precioVenta: document.getElementById("precio").value
+        precioVenta: document.getElementById("precio").value,
+
+        tipoVenta: document.getElementById("tipoVenta").value
 
     };
 
@@ -134,7 +144,7 @@ function guardar() {
 // EDITAR
 // =====================================================
 
-function cargarEdicion(id, nombre, costo, precio) {
+function cargarEdicion(id, nombre, costo, precio, tipoVenta) {
 
     editandoId = id;
 
@@ -143,6 +153,8 @@ function cargarEdicion(id, nombre, costo, precio) {
     document.getElementById("costo").value = costo;
 
     document.getElementById("precio").value = precio;
+
+    document.getElementById("tipoVenta").value = tipoVenta;
 
     document.getElementById("tituloForm").innerText =
         "Editar Producto";
@@ -242,6 +254,8 @@ function limpiar() {
     document.getElementById("costo").value = "";
 
     document.getElementById("precio").value = "";
+
+    document.getElementById("tipoVenta").value = "UNIDAD";
 
     cargar();
 
