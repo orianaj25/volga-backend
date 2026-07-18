@@ -11,14 +11,14 @@ public class PedidoDetalleDTO {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "America/Argentina/Buenos_Aires")
     public LocalDateTime fecha;
     public String producto;
-    public Integer cantidad;
+    public BigDecimal cantidad;
     public BigDecimal subtotal;
     public BigDecimal totalPedido;
     public String metodoPago;
 
 
     public PedidoDetalleDTO(Long pedidoId, LocalDateTime fecha, String producto,
-                            Integer cantidad, BigDecimal subtotal, BigDecimal totalPedido, String metodoPago) {
+                            BigDecimal cantidad, BigDecimal subtotal, BigDecimal totalPedido, String metodoPago) {
         this.pedidoId = pedidoId;
         this.fecha = fecha;
         this.producto = producto;
