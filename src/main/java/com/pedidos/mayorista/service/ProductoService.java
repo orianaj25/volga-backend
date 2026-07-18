@@ -34,6 +34,7 @@ public class ProductoService {
                     p.setNombre(nuevo.getNombre());
                     p.setCosto(nuevo.getCosto());
                     p.setPrecioVenta(nuevo.getPrecioVenta());
+                    p.setTipoVenta(nuevo.getTipoVenta());
                     return repo.save(p);
                 })
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
