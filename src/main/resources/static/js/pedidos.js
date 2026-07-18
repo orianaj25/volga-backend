@@ -53,6 +53,17 @@ function renderProductos(lista) {
 
         }
 
+        const esUnidad = producto.tipoVenta === "UNIDAD";
+
+        const step = esUnidad ? "1" : "0.001";
+        const min = esUnidad ? "1" : "0.001";
+
+        const valor = esUnidad
+            ? parseInt(seleccion[producto.id].cantidad || 1)
+            : Number(seleccion[producto.id].cantidad || 1).toFixed(3);
+
+        const unidad = esUnidad ? "Unidades" : "Kg";
+
         tabla.innerHTML += `
 
             <tr>
@@ -68,17 +79,18 @@ function renderProductos(lista) {
 
                 <td>${producto.nombre}</td>
 
-                <td>$${producto.precioVenta}</td>
+                <td>$${Number(producto.precioVenta).toFixed(2)}</td>
 
                 <td>
 
                     <input
                         type="number"
-                        step="0.001"
-                        min="0.001"
-                        value="${seleccion[producto.id].cantidad}"
+                        step="${step}"
+                        min="${min}"
+                        value="${valor}"
                         class="form-control form-control-sm"
-                        style="width:80px"
+                        style="width:90px"
+                        placeholder="${unidad}"
                         onchange="cambiarCantidad(${producto.id}, this.value)"
                         ${seleccion[producto.id].activo ? "" : "disabled"}
                         id="cant-${producto.id}">
@@ -88,8 +100,11 @@ function renderProductos(lista) {
                 <td>
 
                     $
+
                     <span id="sub-${producto.id}">
-                        0
+
+                        0.00
+
                     </span>
 
                 </td>
@@ -149,7 +164,19 @@ function toggle(id, checked) {
 
 function cambiarCantidad(id, cantidad) {
 
-      seleccion[id].cantidad = Number(cantidad);
+    const producto = productosGlobal.find(p => p.id == id);
+
+    if (!producto) return;
+
+    if (producto.tipoVenta === "UNIDAD") {
+
+        seleccion[id].cantidad = parseInt(cantidad);
+
+    } else {
+
+        seleccion[id].cantidad = Number(cantidad);
+
+    }
 
     recalcular();
 
@@ -171,7 +198,9 @@ function recalcular() {
 
         if (seleccionado && seleccionado.activo) {
 
-            subtotal = producto.precioVenta * seleccionado.cantidad;
+            subtotal =
+                Number(producto.precioVenta) *
+                Number(seleccionado.cantidad);
 
             total += subtotal;
 
@@ -237,7 +266,7 @@ function guardarPedido() {
 
                 productoId: Number(id),
 
-                cantidad: seleccion[id].cantidad
+                cantidad: Number(seleccion[id].cantidad)
 
             });
 
