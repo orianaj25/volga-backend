@@ -1,8 +1,12 @@
 package com.pedidos.mayorista.controller;
 
+import com.pedidos.mayorista.dto.ImportacionProductosDTO;
 import com.pedidos.mayorista.model.Producto;
+import com.pedidos.mayorista.service.ExcelProductoService;
 import com.pedidos.mayorista.service.ProductoService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -12,9 +16,15 @@ import java.util.List;
 public class ProductoController {
 
     private final ProductoService service;
+    private final ExcelProductoService excelProductoService;
 
-    public ProductoController(ProductoService service) {
+    public ProductoController(
+            ProductoService service,
+            ExcelProductoService excelProductoService) {
+
         this.service = service;
+        this.excelProductoService = excelProductoService;
+
     }
 
     @GetMapping
@@ -35,5 +45,25 @@ public class ProductoController {
     @DeleteMapping("/{id}")
     public void borrar(@PathVariable Long id) {
         service.eliminar(id);
+    }
+
+    @PostMapping("/importar")
+    public ResponseEntity<?> importar(
+            @RequestParam("archivo") MultipartFile archivo) {
+
+        try {
+
+            ImportacionProductosDTO resultado =
+                    excelProductoService.importar(archivo);
+
+            return ResponseEntity.ok(resultado);
+
+        } catch (Exception e) {
+
+            return ResponseEntity.badRequest()
+                    .body(e.getMessage());
+
+        }
+
     }
 }

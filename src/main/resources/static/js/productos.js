@@ -261,6 +261,226 @@ function limpiar() {
 
 }
 
+
+
+// ===============================
+// IMPORTAR EXCEL
+// ===============================
+
+async function importarExcel(){
+
+
+
+    const archivo =
+        document.getElementById("archivoExcel")
+        .files[0];
+
+
+
+    if(!archivo){
+
+        alert("Seleccione un archivo Excel");
+
+        return;
+
+    }
+
+
+
+    const formData =
+        new FormData();
+
+
+
+    formData.append(
+        "archivo",
+        archivo
+    );
+
+
+
+
+
+    try{
+
+
+        const respuesta =
+        await axios.post(
+
+            `${API}/importar`,
+
+            formData,
+
+            {
+                headers:{
+                    "Content-Type":
+                    "multipart/form-data"
+                }
+            }
+
+        );
+
+
+
+
+        mostrarResultadoImportacion(
+            respuesta.data
+        );
+
+
+
+        cargarProductos();
+
+
+
+
+    }catch(error){
+
+
+
+        console.error(error);
+
+
+        document.getElementById(
+            "resultadoImportacion"
+        )
+        .innerHTML = `
+
+        <div class="alert alert-danger">
+
+        Error importando archivo:
+        ${error.response?.data || error.message}
+
+        </div>
+
+        `;
+
+
+    }
+
+
+
+}
+
+
+
+
+
+
+
+
+// ===============================
+// RESULTADO IMPORTACION
+// ===============================
+
+function mostrarResultadoImportacion(data){
+
+
+
+    document.getElementById(
+        "resultadoImportacion"
+    )
+    .innerHTML = `
+
+
+    <div class="alert alert-success">
+
+
+        Importación finalizada.
+
+
+        <br>
+
+
+        Productos importados:
+        ${data.importados ?? 0}
+
+
+        <br>
+
+
+        Errores:
+        ${data.errores ?? 0}
+
+
+    </div>
+
+
+    `;
+
+
+}
+
+
+
+
+
+
+
+// ===============================
+// PLANTILLA EXCEL
+// ===============================
+
+function descargarPlantilla(){
+
+
+    const datos = [
+
+
+        {
+            Nombre:"Coca Cola 2.25",
+            Costo:1800,
+            PrecioVenta:2500,
+            TipoVenta:"UNIDAD"
+        },
+
+
+        {
+            Nombre:"Carne Picada",
+            Costo:8500,
+            PrecioVenta:12000,
+            TipoVenta:"KILOGRAMO"
+        },
+
+
+        {
+            Nombre:"Pan Francés",
+            Costo:900,
+            PrecioVenta:1400,
+            TipoVenta:"UNIDAD"
+        }
+
+
+    ];
+
+
+
+    const hoja =
+        XLSX.utils.json_to_sheet(datos);
+
+
+
+    const libro =
+        XLSX.utils.book_new();
+
+
+
+    XLSX.utils.book_append_sheet(
+        libro,
+        hoja,
+        "Productos"
+    );
+
+
+
+    XLSX.writeFile(
+        libro,
+        "Plantilla_Productos_NEXA.xlsx"
+    );
+
+
+}
+
 // =====================================================
 // INICIO
 // =====================================================
