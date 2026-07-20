@@ -267,3 +267,32 @@ body{
     }
 
 }
+@media (max-width:768px){
+
+    .sidebar{
+
+        width:100%;
+
+    }
+
+    .sidebar-menu a{
+
+        padding:10px;
+
+        font-size:14px;
+
+    }
+
+    .sidebar-header{
+
+        padding:15px;
+
+    }
+
+    .sidebar-header span{
+
+        display:none;
+
+    }
+
+}

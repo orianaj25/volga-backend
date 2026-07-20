@@ -361,3 +361,41 @@ h5{
 .action-btn.primary:hover{
     background: #2563eb;
 }
+/* ==========================================
+   RESPONSIVE DASHBOARD
+========================================== */
+
+@media (max-width: 768px){
+
+    /* Tarjetas */
+
+    .cards-container{
+        grid-template-columns:1fr;
+        gap:15px;
+    }
+
+    .card{
+        width:100%;
+    }
+
+    /* Grafico + Acciones */
+
+    .dashboard-middle{
+        grid-template-columns:1fr;
+        gap:20px;
+    }
+
+    .chart-card{
+        width:100%;
+        overflow-x:auto;
+    }
+
+    .chart-card canvas{
+        height:220px !important;
+    }
+
+    .quick-actions{
+        width:100%;
+    }
+
+}
