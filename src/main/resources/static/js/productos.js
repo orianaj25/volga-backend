@@ -329,7 +329,7 @@ async function importarExcel(){
 
 
 
-        cargarProductos();
+cargar();
 
 
 
